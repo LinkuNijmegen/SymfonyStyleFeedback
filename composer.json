@@ -1,0 +1,24 @@
+{
+    "name": "linku/feedback-symfonystyle",
+    "description": "Add-on for linku/feedback for Symfony CLI feedback",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^7.2.0",
+        "symfony/console": "^5.0",
+        "linku/feedback": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Linku\\SymfonyStyleFeedback\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Linku\\SymfonyStyleFeedback\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0"
+    }
+}
