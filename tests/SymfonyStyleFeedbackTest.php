@@ -5,12 +5,15 @@ namespace Linku\SymfonyStyleFeedback\Tests;
 
 use Linku\SymfonyStyleFeedback\SymfonyStyleFeedback;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use RuntimeException;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class SymfonyStyleFeedbackTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SymfonyStyle|ObjectProphecy
      */
