@@ -4,18 +4,15 @@ declare(strict_types=1);
 namespace Linku\SymfonyStyleFeedback\Tests;
 
 use Linku\SymfonyStyleFeedback\SymfonyStyleFeedback;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use RuntimeException;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class SymfonyStyleFeedbackTest extends TestCase
 {
-    use ProphecyTrait;
-
     /**
-     * @var SymfonyStyle|ObjectProphecy
+     * @var SymfonyStyle|MockObject
      */
     private $symfonyStyle;
 
@@ -26,11 +23,9 @@ final class SymfonyStyleFeedbackTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->symfonyStyle = $this->prophesize(SymfonyStyle::class);
+        $this->symfonyStyle = $this->createMock(SymfonyStyle::class);
 
-        $this->testSubject = new SymfonyStyleFeedback(
-            $this->symfonyStyle->reveal()
-        );
+        $this->testSubject = new SymfonyStyleFeedback($this->symfonyStyle);
     }
 
     public function testException(): void
@@ -39,8 +34,9 @@ final class SymfonyStyleFeedbackTest extends TestCase
         $exception = new RuntimeException($exceptionMessage);
         $expectedText = '<fg=red>'.$exceptionMessage.'</>';
 
-        $this->symfonyStyle->text($expectedText)
-            ->shouldBeCalledOnce();
+        $this->symfonyStyle->expects(self::once())
+            ->method('text')
+            ->with($expectedText);
 
         $this->testSubject->exception($exception);
     }
@@ -50,8 +46,9 @@ final class SymfonyStyleFeedbackTest extends TestCase
         $message = 'Something went wrong!';
         $expectedText = '<fg=yellow>'.$message.'</>';
 
-        $this->symfonyStyle->text($expectedText)
-            ->shouldBeCalledOnce();
+        $this->symfonyStyle->expects(self::once())
+            ->method('text')
+            ->with($expectedText);
 
         $this->testSubject->warning($message);
     }
@@ -61,8 +58,9 @@ final class SymfonyStyleFeedbackTest extends TestCase
         $message = 'Something went wrong!';
         $expectedText = '<fg=red>'.$message.'</>';
 
-        $this->symfonyStyle->text($expectedText)
-            ->shouldBeCalledOnce();
+        $this->symfonyStyle->expects(self::once())
+            ->method('text')
+            ->with($expectedText);
 
         $this->testSubject->error($message);
     }
@@ -71,8 +69,9 @@ final class SymfonyStyleFeedbackTest extends TestCase
     {
         $message = 'Something happened.';
 
-        $this->symfonyStyle->text($message)
-            ->shouldBeCalledOnce();
+        $this->symfonyStyle->expects(self::once())
+            ->method('text')
+            ->with($message);
 
         $this->testSubject->info($message);
     }
@@ -81,8 +80,9 @@ final class SymfonyStyleFeedbackTest extends TestCase
     {
         $message = 'Something went right!';
 
-        $this->symfonyStyle->success($message)
-            ->shouldBeCalledOnce();
+        $this->symfonyStyle->expects(self::once())
+            ->method('success')
+            ->with($message);
 
         $this->testSubject->success($message);
     }
@@ -91,10 +91,13 @@ final class SymfonyStyleFeedbackTest extends TestCase
     {
         $defaultTotal = 0;
 
-        $this->symfonyStyle->writeln('')
-            ->shouldBeCalledOnce();
-        $this->symfonyStyle->progressStart($defaultTotal)
-            ->shouldBeCalledOnce();
+        $this->symfonyStyle->expects(self::once())
+            ->method('writeln')
+            ->with('');
+
+        $this->symfonyStyle->expects(self::once())
+            ->method('progressStart')
+            ->with($defaultTotal);
 
         $this->testSubject->startProcess();
     }
@@ -103,18 +106,21 @@ final class SymfonyStyleFeedbackTest extends TestCase
     {
         $total = 25;
 
-        $this->symfonyStyle->writeln('')
-            ->shouldBeCalledOnce();
-        $this->symfonyStyle->progressStart($total)
-            ->shouldBeCalledOnce();
+        $this->symfonyStyle->expects(self::once())
+            ->method('writeln')
+            ->with('');
+
+        $this->symfonyStyle->expects(self::once())
+            ->method('progressStart')
+            ->with($total);
 
         $this->testSubject->startProcess($total);
     }
 
     public function testFinishProcess(): void
     {
-        $this->symfonyStyle->progressFinish()
-            ->shouldBeCalledOnce();
+        $this->symfonyStyle->expects(self::once())
+            ->method('progressFinish');
 
         $this->testSubject->finishProcess();
     }
@@ -123,8 +129,9 @@ final class SymfonyStyleFeedbackTest extends TestCase
     {
         $defaultSteps = 1;
 
-        $this->symfonyStyle->progressAdvance($defaultSteps)
-            ->shouldBeCalledOnce();
+        $this->symfonyStyle->expects(self::once())
+            ->method('progressAdvance')
+            ->with($defaultSteps);
 
         $this->testSubject->advanceProcess();
     }
@@ -133,8 +140,9 @@ final class SymfonyStyleFeedbackTest extends TestCase
     {
         $steps = 5;
 
-        $this->symfonyStyle->progressAdvance($steps)
-            ->shouldBeCalledOnce();
+        $this->symfonyStyle->expects(self::once())
+            ->method('progressAdvance')
+            ->with($steps);
 
         $this->testSubject->advanceProcess($steps);
     }
